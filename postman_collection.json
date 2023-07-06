@@ -1,0 +1,874 @@
+{
+	"info": {
+		"_postman_id": "c132b3de-e652-4b6e-b47e-76a85466d7b4",
+		"name": "DCSA Surrender + Surrender RSP API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Surrender",
+			"item": [
+				{
+					"name": "Positive tests",
+					"item": [
+						{
+							"name": "Test: Basic surrender request for delivery",
+							"item": [
+								{
+									"name": "[Unofficial] Register TD reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = utils.generateTransportDocumentReference();\r",
+													"pm.collectionVariables.set(\"currentTransportDocumentReference\", tdRef);\r",
+													"pm.environment.set(\"tdRef\", tdRef);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"transportDocumentReference\": \"{{tdRef}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = pm.collectionVariables.get(\"currentTransportDocumentReference\");\r",
+													"if (!tdRef) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}\r",
+													"const surrenderRequestedBy = {\r",
+													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
+													"    legalName: \"Foo'R'us\"\r",
+													"};\r",
+													"var body = {\r",
+													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
+													"    transportDocumentReference: tdRef,\r",
+													"    surrenderRequestCode: 'SREQ',\r",
+													"    surrenderRequestedBy: surrenderRequestedBy,\r",
+													"    endorsementChain: [\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
+													"            actor: surrenderRequestedBy\r",
+													"        }\r",
+													"    ]\r",
+													"};\r",
+													"\r",
+													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamicBody}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"surrender-requests"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test: Basic surrender request for amendment",
+							"item": [
+								{
+									"name": "[Unofficial] Register TD reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = utils.generateTransportDocumentReference();\r",
+													"pm.collectionVariables.set(\"currentTransportDocumentReference\", tdRef);\r",
+													"pm.environment.set(\"tdRef\", tdRef);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"transportDocumentReference\": \"{{tdRef}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = pm.collectionVariables.get(\"currentTransportDocumentReference\");\r",
+													"if (!tdRef) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}\r",
+													"const surrenderRequestedBy = {\r",
+													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
+													"    legalName: \"Foo'R'us\"\r",
+													"};\r",
+													"var body = {\r",
+													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
+													"    transportDocumentReference: tdRef,\r",
+													"    surrenderRequestCode: 'AREQ',\r",
+													"    surrenderRequestedBy: surrenderRequestedBy,\r",
+													"    endorsementChain: [\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
+													"            actor: surrenderRequestedBy\r",
+													"        }\r",
+													"    ]\r",
+													"};\r",
+													"\r",
+													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamicBody}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"surrender-requests"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test: Surrender request for negotiable bill with various trade actions",
+							"item": [
+								{
+									"name": "[Unofficial] Register TD reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = utils.generateTransportDocumentReference();\r",
+													"pm.collectionVariables.set(\"currentTransportDocumentReference\", tdRef);\r",
+													"pm.environment.set(\"tdRef\", tdRef);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"transportDocumentReference\": \"{{tdRef}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = pm.collectionVariables.get(\"currentTransportDocumentReference\");\r",
+													"if (!tdRef) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}\r",
+													"\r",
+													"const initialEndorsee = {\r",
+													"    eblPlatformIdentifier: \"ebl-trader1@dcsa-platform.com\",\r",
+													"    legalName: \"We buy from shippers and sell to the market\"\r",
+													"}\r",
+													"const intermediateEndorsee = {\r",
+													"    eblPlatformIdentifier: \"ebl-trader2@dcsa-platform.com\",\r",
+													"    legalName: \"We sell eBLs with markups\"\r",
+													"}\r",
+													"const finalEndorsee = {\r",
+													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
+													"    legalName: \"Foo'R'us\"\r",
+													"}\r",
+													"var body = {\r",
+													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
+													"    transportDocumentReference: tdRef,\r",
+													"    surrenderRequestCode: 'SREQ',\r",
+													"    surrenderRequestedBy: finalEndorsee,\r",
+													"    endorsementChain: [\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-01T10:30:00Z\",\r",
+													"            actor: initialEndorsee\r",
+													"        },\r",
+													"        {\r",
+													"            action: \"ETOO\",\r",
+													"            actionDateTime: \"2023-07-02T11:30:00Z\",\r",
+													"            actor: initialEndorsee,\r",
+													"            recipient: intermediateEndorsee,\r",
+													"        },\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-02T13:30:00Z\",\r",
+													"            actor: intermediateEndorsee\r",
+													"        },\r",
+													"        {\r",
+													"            action: \"ETOF\",\r",
+													"            actionDateTime: \"2023-07-05T16:30:00Z\",\r",
+													"            actor: initialEndorsee,\r",
+													"            recipient: intermediateEndorsee,\r",
+													"        },\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-05T17:30:00Z\",\r",
+													"            actor: intermediateEndorsee\r",
+													"        }\r",
+													"    ]\r",
+													"};\r",
+													"\r",
+													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamicBody}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"surrender-requests"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative tests",
+					"item": [
+						{
+							"name": "Single Request tests",
+							"item": [
+								{
+									"name": "Surrender request for unknown TD reference",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Error mentioned is correct\", () => {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.errors[0].reason).to.eq(\"invalidInput\")\r",
+													"    pm.expect(jsonData.errors[0].message).to.eq(\"Did not expect a surrender request for transport document reference: TD-UNKNOWN-REF\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const surrenderRequestedBy = {\r",
+													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
+													"    legalName: \"Foo'R'us\"\r",
+													"};\r",
+													"var body = {\r",
+													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
+													"    transportDocumentReference: 'TD-UNKNOWN-REF',\r",
+													"    surrenderRequestedBy: surrenderRequestedBy,\r",
+													"    surrenderRequestCode: 'SREQ',\r",
+													"    endorsementChain: [\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
+													"            actor: surrenderRequestedBy\r",
+													"        }\r",
+													"    ]\r",
+													"};\r",
+													"\r",
+													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamicBody}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"surrender-requests"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test: Surrender requested by is mandatory",
+							"item": [
+								{
+									"name": "[Unofficial] Register TD reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = utils.generateTransportDocumentReference();\r",
+													"pm.collectionVariables.set(\"currentTransportDocumentReference\", tdRef);\r",
+													"pm.environment.set(\"tdRef\", tdRef);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"transportDocumentReference\": \"{{tdRef}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Error mentioned is correct\", () => {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.errors[0].reason).to.eq(\"surrenderRequestedBy\")\r",
+													"    pm.expect(jsonData.errors[0].message).to.eq(\"must not be null\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = pm.collectionVariables.get(\"currentTransportDocumentReference\");\r",
+													"if (!tdRef) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}\r",
+													"const surrenderRequestedBy = {\r",
+													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
+													"    legalName: \"Foo'R'us\"\r",
+													"};\r",
+													"var body = {\r",
+													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
+													"    transportDocumentReference: tdRef,\r",
+													"    surrenderRequestCode: 'SREQ',\r",
+													"    endorsementChain: [\r",
+													"        {\r",
+													"            action: \"AEND\",\r",
+													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
+													"            actor: surrenderRequestedBy\r",
+													"        }\r",
+													"    ]\r",
+													"};\r",
+													"\r",
+													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamicBody}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"surrender-requests"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test: Non-empty endorsement chain is required",
+							"item": [
+								{
+									"name": "[Unofficial] Register TD reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = utils.generateTransportDocumentReference();\r",
+													"pm.collectionVariables.set(\"currentTransportDocumentReference\", tdRef);\r",
+													"pm.environment.set(\"tdRef\", tdRef);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"transportDocumentReference\": \"{{tdRef}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Error mentioned is correct\", () => {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.errors[0].reason).to.eq(\"endorsementChain\")\r",
+													"    pm.expect(jsonData.errors[0].message).to.eq(\"Endorsement chain must be non-empty\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const tdRef = pm.collectionVariables.get(\"currentTransportDocumentReference\");\r",
+													"if (!tdRef) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}\r",
+													"const surrenderRequestedBy = {\r",
+													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
+													"    legalName: \"Foo'R'us\"\r",
+													"};\r",
+													"var body = {\r",
+													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
+													"    transportDocumentReference: tdRef,\r",
+													"    surrenderRequestCode: 'SREQ',\r",
+													"    surrenderRequestedBy: surrenderRequestedBy,\r",
+													"    endorsementChain: []\r",
+													"};\r",
+													"\r",
+													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{{dynamicBody}}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
+											"host": [
+												"{{SUR_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_CONTEXT_PATH}}",
+												"surrender-requests"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"API-Version is present\", () => {",
+							"    pm.response.to.have.header(\"API-Version\");",
+							"});",
+							"",
+							"pm.test(\"API-Version header is set correctly\", () => {",
+							"    if (!pm.request.url.path.includes(\"unofficial\")) {",
+							"        pm.expect(pm.response.headers.get(\"API-Version\")).to.eql(pm.collectionVariables.get(\"SUR_SPEC_VERSION\"));",
+							"    }",
+							"});"
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"const _makeid = (length, extended) => {",
+					"    let result = '';",
+					"    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789' + (extended ? '+-_' : '');",
+					"    const charactersLength = characters.length;",
+					"    let counter = 0;",
+					"    while (counter < length) {",
+					"      result += characters.charAt(Math.floor(Math.random() * charactersLength));",
+					"      counter += 1;",
+					"    }",
+					"    return result;",
+					"}",
+					"",
+					"const _resolveVariable = (varname) => {",
+					"    const raw = pm.variables.get(varname);",
+					"    if (!raw && !pm.variables.has(varname)) {",
+					"        throw new Error(`Unknown/resolvable variable: ${varname}`);",
+					"    }",
+					"    return raw;",
+					"}",
+					"",
+					"const _nullState = () => {",
+					"    return {",
+					"        tdReferences: {",
+					"",
+					"        }",
+					"    };",
+					"}",
+					"",
+					"let _state = _nullState();",
+					"",
+					"utils = {",
+					"  generateTransportDocumentReference() {",
+					"    return 'TDR-' + _makeid(16);",
+					"  },",
+					"",
+					"  generateSurrenderRequestReference() {",
+					"      return 'SR-' + _makeid(20 + Math.floor(Math.random() * 80))",
+					"  },",
+					"",
+					"  fetchTransportDocumentRefereneById(id) {",
+					"    let tdRef = _state.tdReferences[`${id}`];",
+					"    if (!tdRef) {",
+					"        tdRef = utils.generateTransportDocumentReference();",
+					"        _state.tdReferences[`${id}`] = tdRef;",
+					"    }",
+					"    return tdRef;",
+					"  },",
+					"};",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "SUR_BASE_URL",
+			"value": "http://localhost:9090",
+			"type": "default"
+		},
+		{
+			"key": "SUR_RSP_BASE_URL",
+			"value": "http://localhost:9090",
+			"type": "default"
+		},
+		{
+			"key": "SUR_CONTEXT_PATH",
+			"value": "sur/v1",
+			"type": "default"
+		},
+		{
+			"key": "SUR_RSP_CONTEXT_PATH",
+			"value": "sur-rsp/v1",
+			"type": "default"
+		},
+		{
+			"key": "SUR_SPEC_VERSION",
+			"value": "1.0.0",
+			"type": "default"
+		},
+		{
+			"key": "SUR_RSP_SPEC_VERSION",
+			"value": "1.0.0",
+			"type": "default"
+		}
+	]
+}
