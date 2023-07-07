@@ -769,6 +769,397 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Surrender Response",
+			"item": [
+				{
+					"name": "Positive tests",
+					"item": [
+						{
+							"name": "Test: Accept surrender",
+							"item": [
+								{
+									"name": "[Unofficial] Register SR reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const ref = utils.generateSurrenderRequestReference();\r",
+													"pm.collectionVariables.set(\"currentSurrenderRequestReference\", ref);\r",
+													"pm.environment.set(\"ref\", ref);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"{{ref}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request-answer",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request-answer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const ref = pm.collectionVariables.get(\"currentSurrenderRequestReference\");\r",
+													"if (!ref) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentSurrenderRequestReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"{{currentSurrenderRequestReference}}\",\r\n    \"action\": \"SURR\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/surrender-request-responses",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"surrender-request-responses"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test: Reject surrender",
+							"item": [
+								{
+									"name": "[Unofficial] Register SR reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const ref = utils.generateSurrenderRequestReference();\r",
+													"pm.collectionVariables.set(\"currentSurrenderRequestReference\", ref);\r",
+													"pm.environment.set(\"ref\", ref);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"{{ref}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request-answer",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request-answer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const ref = pm.collectionVariables.get(\"currentSurrenderRequestReference\");\r",
+													"if (!ref) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentSurrenderRequestReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(204);\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"{{currentSurrenderRequestReference}}\",\r\n    \"action\": \"SREJ\",\r\n    \"comments\": \"The request was requested due to <A_COMPLICATED_BUT_LEGALLY_SOUND_REASON>\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/surrender-request-responses",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"surrender-request-responses"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Negative tests",
+					"item": [
+						{
+							"name": "Single Request tests",
+							"item": [
+								{
+									"name": "Unknown surrender request reference",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"pm.test(\"Error mentioned is correct\", () => {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.errors[0].reason).to.eq(\"invalidInput\")\r",
+													"    pm.expect(jsonData.errors[0].message).to.eq(\"Did not expect an answer for surrender request reference: SR-UNKNOWN-REF\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"SR-UNKNOWN-REF\",\r\n    \"action\": \"SURR\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/surrender-request-responses",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"surrender-request-responses"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Test: Reject surrender must have a comment",
+							"item": [
+								{
+									"name": "[Unofficial] Register SR reference as known",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const ref = utils.generateSurrenderRequestReference();\r",
+													"pm.collectionVariables.set(\"currentSurrenderRequestReference\", ref);\r",
+													"pm.environment.set(\"ref\", ref);\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"{{ref}}\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request-answer",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"unofficial",
+												"ensure-pending-surrender-request-answer"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Submit surrender request",
+									"event": [
+										{
+											"listen": "prerequest",
+											"script": {
+												"exec": [
+													"const ref = pm.collectionVariables.get(\"currentSurrenderRequestReference\");\r",
+													"if (!ref) {\r",
+													"    throw new Error(\"Requests run out of order\")\r",
+													"}"
+												],
+												"type": "text/javascript"
+											}
+										},
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													"pm.collectionVariables.unset(\"currentSurrenderRequestReference\");\r",
+													"\r",
+													"pm.test(\"Status code is correct\", () => {\r",
+													"    pm.response.to.have.status(400);\r",
+													"});\r",
+													"\r",
+													"\r",
+													"pm.test(\"Error mentioned is correct\", () => {\r",
+													"    var jsonData = pm.response.json();\r",
+													"    pm.expect(jsonData.errors[0].reason).to.eq(\"invalidInput\")\r",
+													"    pm.expect(jsonData.errors[0].message).to.eq(\"The comments field must be non-empty when rejecting a surrender request\");\r",
+													"});\r",
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"surrenderRequestReference\": \"{{currentSurrenderRequestReference}}\",\r\n    \"action\": \"SREJ\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{SUR_RSP_BASE_URL}}/{{SUR_RSP_CONTEXT_PATH}}/surrender-request-responses",
+											"host": [
+												"{{SUR_RSP_BASE_URL}}"
+											],
+											"path": [
+												"{{SUR_RSP_CONTEXT_PATH}}",
+												"surrender-request-responses"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				}
+			]
 		}
 	],
 	"event": [
