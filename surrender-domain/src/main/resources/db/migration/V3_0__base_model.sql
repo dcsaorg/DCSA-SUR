@@ -16,7 +16,7 @@ CREATE TABLE transaction_party_supporting_code (
 
 CREATE TABLE surrender_request (
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-  surrender_request_reference varchar(100) NULL,
+  surrender_request_reference varchar(100) NULL UNIQUE,
   transport_document_reference varchar(20) NOT NULL,
   surrender_request_code varchar(4) NULL CHECK ( (surrender_request_code IS NULL AND surrender_request_reference IS NULL) OR (surrender_request_reference IS NOT NULL AND surrender_request_code IN ('SREQ', 'AREQ'))),
   comments varchar(255) NULL,
@@ -24,6 +24,8 @@ CREATE TABLE surrender_request (
   created_date_time timestamp with time zone NOT NULL default now()
 );
 
+CREATE UNIQUE INDEX ON surrender_request (transport_document_reference)
+  WHERE surrender_request_reference IS NULL;
 
 
 CREATE TABLE endorsement_chain_link (
@@ -38,3 +40,13 @@ CREATE TABLE endorsement_chain_link (
   recipient uuid NULL references transaction_party(id)
 );
 
+CREATE TABLE surrender_request_answer (
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  surrender_request_reference varchar(100) NOT NULL,
+  action varchar(4) NULL CHECK ( action IS NULL OR action IN ('SURR', 'SREJ') ),
+  comments varchar(255) NULL,
+  created_date_time timestamp with time zone NOT NULL default now()
+);
+
+CREATE UNIQUE INDEX ON surrender_request_answer (surrender_request_reference)
+  WHERE action IS NULL;
