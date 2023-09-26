@@ -1,11 +1,9 @@
 package org.dcsa.surrender.domain.persistence.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.dcsa.surrender.domain.persistence.entity.enums.EndorsementActionCode;
-
 import java.time.ZonedDateTime;
 import java.util.UUID;
+import lombok.*;
 
 @Data
 @Builder(toBuilder = true)
@@ -23,10 +21,6 @@ public class EndorsementChainLink {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "surrender_request")
   private SurrenderRequest surrenderRequest;
-
-  @Column(name = "action", nullable = false)
-  @Enumerated(EnumType.STRING)
-  private EndorsementActionCode action;
 
   @Column(name = "action_date_time", nullable = false)
   private ZonedDateTime actionDateTime;

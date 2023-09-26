@@ -90,13 +90,7 @@
 													"    transportDocumentReference: tdRef,\r",
 													"    surrenderRequestCode: 'SREQ',\r",
 													"    surrenderRequestedBy: surrenderRequestedBy,\r",
-													"    endorsementChain: [\r",
-													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
-													"            actor: surrenderRequestedBy\r",
-													"        }\r",
-													"    ]\r",
+													"    endorsementChain: []\r",
 													"};\r",
 													"\r",
 													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
@@ -211,13 +205,7 @@
 													"    transportDocumentReference: tdRef,\r",
 													"    surrenderRequestCode: 'AREQ',\r",
 													"    surrenderRequestedBy: surrenderRequestedBy,\r",
-													"    endorsementChain: [\r",
-													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
-													"            actor: surrenderRequestedBy\r",
-													"        }\r",
-													"    ]\r",
+													"    endorsementChain: []\r",
 													"};\r",
 													"\r",
 													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
@@ -343,31 +331,14 @@
 													"    surrenderRequestedBy: finalEndorsee,\r",
 													"    endorsementChain: [\r",
 													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-01T10:30:00Z\",\r",
-													"            actor: initialEndorsee\r",
-													"        },\r",
-													"        {\r",
-													"            action: \"ETOO\",\r",
 													"            actionDateTime: \"2023-07-02T11:30:00Z\",\r",
 													"            actor: initialEndorsee,\r",
 													"            recipient: intermediateEndorsee,\r",
 													"        },\r",
 													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-02T13:30:00Z\",\r",
-													"            actor: intermediateEndorsee\r",
-													"        },\r",
-													"        {\r",
-													"            action: \"ETOF\",\r",
 													"            actionDateTime: \"2023-07-05T16:30:00Z\",\r",
 													"            actor: initialEndorsee,\r",
 													"            recipient: intermediateEndorsee,\r",
-													"        },\r",
-													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-05T17:30:00Z\",\r",
-													"            actor: intermediateEndorsee\r",
 													"        }\r",
 													"    ]\r",
 													"};\r",
@@ -449,13 +420,7 @@
 													"    transportDocumentReference: 'TD-UNKNOWN-REF',\r",
 													"    surrenderRequestedBy: surrenderRequestedBy,\r",
 													"    surrenderRequestCode: 'SREQ',\r",
-													"    endorsementChain: [\r",
-													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
-													"            actor: surrenderRequestedBy\r",
-													"        }\r",
-													"    ]\r",
+													"    endorsementChain: []\r",
 													"};\r",
 													"\r",
 													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
@@ -575,133 +540,6 @@
 													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
 													"    transportDocumentReference: tdRef,\r",
 													"    surrenderRequestCode: 'SREQ',\r",
-													"    endorsementChain: [\r",
-													"        {\r",
-													"            action: \"AEND\",\r",
-													"            actionDateTime: \"2023-07-05T10:30:00Z\",\r",
-													"            actor: surrenderRequestedBy\r",
-													"        }\r",
-													"    ]\r",
-													"};\r",
-													"\r",
-													"pm.environment.set(\"dynamicBody\", JSON.stringify(body));"
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{{dynamicBody}}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/surrender-requests",
-											"host": [
-												"{{SUR_BASE_URL}}"
-											],
-											"path": [
-												"{{SUR_CONTEXT_PATH}}",
-												"surrender-requests"
-											]
-										}
-									},
-									"response": []
-								}
-							]
-						},
-						{
-							"name": "Test: Non-empty endorsement chain is required",
-							"item": [
-								{
-									"name": "[Unofficial] Register TD reference as known",
-									"event": [
-										{
-											"listen": "prerequest",
-											"script": {
-												"exec": [
-													"const tdRef = utils.generateTransportDocumentReference();\r",
-													"pm.collectionVariables.set(\"currentTransportDocumentReference\", tdRef);\r",
-													"pm.environment.set(\"tdRef\", tdRef);\r",
-													""
-												],
-												"type": "text/javascript"
-											}
-										}
-									],
-									"request": {
-										"method": "PUT",
-										"header": [],
-										"body": {
-											"mode": "raw",
-											"raw": "{\r\n    \"transportDocumentReference\": \"{{tdRef}}\"\r\n}",
-											"options": {
-												"raw": {
-													"language": "json"
-												}
-											}
-										},
-										"url": {
-											"raw": "{{SUR_BASE_URL}}/{{SUR_CONTEXT_PATH}}/unofficial/ensure-pending-surrender-request",
-											"host": [
-												"{{SUR_BASE_URL}}"
-											],
-											"path": [
-												"{{SUR_CONTEXT_PATH}}",
-												"unofficial",
-												"ensure-pending-surrender-request"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "Submit surrender request",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"exec": [
-													"pm.collectionVariables.unset(\"currentTransportDocumentReference\");\r",
-													"\r",
-													"pm.test(\"Status code is correct\", () => {\r",
-													"    pm.response.to.have.status(400);\r",
-													"});\r",
-													"\r",
-													"pm.test(\"Error mentioned is correct\", () => {\r",
-													"    var jsonData = pm.response.json();\r",
-													"    pm.expect(jsonData.errors[0].reason).to.eq(\"endorsementChain\")\r",
-													"    pm.expect(jsonData.errors[0].message).to.eq(\"Endorsement chain must be non-empty\");\r",
-													"});\r",
-													""
-												],
-												"type": "text/javascript"
-											}
-										},
-										{
-											"listen": "prerequest",
-											"script": {
-												"exec": [
-													"const tdRef = pm.collectionVariables.get(\"currentTransportDocumentReference\");\r",
-													"if (!tdRef) {\r",
-													"    throw new Error(\"Requests run out of order\")\r",
-													"}\r",
-													"const surrenderRequestedBy = {\r",
-													"    eblPlatformIdentifier: \"foo@dcsa-platform.com\",\r",
-													"    legalName: \"Foo'R'us\"\r",
-													"};\r",
-													"var body = {\r",
-													"    surrenderRequestReference: utils.generateSurrenderRequestReference(),\r",
-													"    transportDocumentReference: tdRef,\r",
-													"    surrenderRequestCode: 'SREQ',\r",
-													"    surrenderRequestedBy: surrenderRequestedBy,\r",
 													"    endorsementChain: []\r",
 													"};\r",
 													"\r",
