@@ -34,7 +34,6 @@ CREATE TABLE endorsement_chain_link (
   -- but I am not willing to fight with JPA/hibernate to make it work.
   surrender_request uuid NOT NULL REFERENCES surrender_request(id),
   entry_order int NULL,
-  action varchar(4) NOT NULL CHECK (action IN ('ETOF', 'ETOO', 'ETOB', 'AEND')),
   action_date_time timestamp with time zone NOT NULL,
   actor uuid NOT NULL references transaction_party(id),
   recipient uuid NULL references transaction_party(id)

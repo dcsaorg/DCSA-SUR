@@ -31,7 +31,6 @@ public record SurrenderRequestTO(
   TransactionPartyTO surrenderRequestedBy,
 
   @NotNull
-  @Size(min =  1, message = "Endorsement chain must be non-empty")
   List<@Valid EndorsementChainLinkTO> endorsementChain
 ) {
   @Builder(toBuilder = true)
