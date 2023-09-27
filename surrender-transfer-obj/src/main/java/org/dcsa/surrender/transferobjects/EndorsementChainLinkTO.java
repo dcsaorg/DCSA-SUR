@@ -14,6 +14,7 @@ public record EndorsementChainLinkTO(
   TransactionPartyTO actor,
 
   @Valid
+  @NotNull
   TransactionPartyTO recipient
 ) {
   @Builder(toBuilder = true)
