@@ -36,7 +36,7 @@ CREATE TABLE endorsement_chain_link (
   entry_order int NULL,
   action_date_time timestamp with time zone NOT NULL,
   actor uuid NOT NULL references transaction_party(id),
-  recipient uuid NULL references transaction_party(id)
+  recipient uuid NOT NULL references transaction_party(id)
 );
 
 CREATE TABLE surrender_request_answer (
